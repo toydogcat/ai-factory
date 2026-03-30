@@ -11,7 +11,7 @@ services:
       - "--entrypoints.websecure.address=:443"
     ports:
       - "80:80"
-      - "8082:8080" # Dashboard (Moved from 8080 to 8082)
+      - "8088:8080" # Dashboard (Moved to 8088 to avoid 8080, 8081, 8082 conflicts)
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./traefik_dynamic.yml:/etc/traefik/dynamic_conf.yml:ro"
