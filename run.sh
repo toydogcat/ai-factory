@@ -89,7 +89,8 @@ echo -e "\n${YELLOW}請選擇部署模式 (Select Mode):${NC}"
 echo "1) 🛠️  DEV (Localhost Only)"
 echo "2) 🧪  STAGING (ngrok Sharing)"
 echo "3) 🌍  PRODUCTION (Cloudflare + Firebase Auto-Deploy)"
-read -p "指令 [1-3]: " MODE
+echo "4) 💎  PROD+ (High-Persistence - Fixed Node Mode)"
+read -p "指令 [1-4]: " MODE
 
 # --- START INFRASTRUCTURE ---
 echo -e "\n${BLUE}📦 啟動基礎架構 (Starting Infrastructure)...${NC}"
@@ -133,6 +134,28 @@ elif [[ "$MODE" == "3" ]]; then
             break
         fi
     done
+elif [[ "$MODE" == "4" ]]; then
+    echo -e "${GREEN}${BOLD}✨ 模式: PROD+ [高持久性生產模式]${NC}"
+    # Identify if we have an existing working tunnel from a previous run
+    EXISTING_URL=$(grep -o "https://[a-zA-Z0-9-]\+\.trycloudflare\.com" tunnel.log 2>/dev/null | head -1)
+    
+    if [[ ! -z "$EXISTING_URL" ]]; then
+        echo -e "${YELLOW}♻️  偵測到現有隧道: ${EXISTING_URL}${NC}"
+        echo -e "${YELLOW}⏩ 跳過全量部署，直接複用現有連線。${NC}"
+        PUBLIC_URL=$EXISTING_URL
+    else
+        echo -e "${BLUE}📡 建立新隧道...${NC}"
+        ./scripts/catch_tunnel.sh > tunnel.log 2>&1 &
+        for i in {1..15}; do
+            sleep 1
+            if grep -q "https://" tunnel.log; then
+                PUBLIC_URL=$(grep -o "https://[a-zA-Z0-9-]\+\.trycloudflare\.com" tunnel.log | head -1)
+                echo -e "${GREEN}🎉 成功獲取新網址: ${PUBLIC_URL}${NC}"
+                deploy_to_firebase "$PUBLIC_URL"
+                break
+            fi
+        done
+    fi
 fi
 
 # --- START BACKEND ---
