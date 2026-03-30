@@ -22,11 +22,21 @@ echo -e "-----------------------------------"
 cleanup() {
     echo -e "\n${RED}🛑 正在關閉所有服務... (Stopping all services)${NC}"
     pkill -P $$ || true
+    # Kill common process patterns
     pkill -f "uvicorn app.main:app" || true
     pkill -f "npm run dev" || true
     pkill -f "share_ngrok.py" || true
     pkill -f "catch_tunnel.sh" || true
+    
+    # Aggressive port clearing (important for remote nodes)
+    fuser -k 7051/tcp 2>/dev/null || true
+    fuser -k 5173/tcp 2>/dev/null || true
+    
     docker compose -f docker/docker-compose.traefik.yml down || true
+    
+    # Wipe stale logs to prevent re-using old tunnel URLs
+    rm -f tunnel.log backend.log stg_url.txt
+    
     echo -e "${GREEN}✅ 清理完成！ (Cleanup complete)${NC}"
 }
 
