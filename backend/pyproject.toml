@@ -1,0 +1,21 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "docker>=7.1.0",
+    "fastapi>=0.135.2",
+    "loguru>=0.7.3",
+    "psycopg2-binary>=2.9.11",
+    "pydantic>=2.12.5",
+    "python-dotenv>=1.2.2",
+    "psutil>=6.0.0",
+    "requests>=2.33.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "sqlalchemy>=2.0.48",
+    "uvicorn>=0.42.0",
+    "firebase-admin>=7.3.0",
+]

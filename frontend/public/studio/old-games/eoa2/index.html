@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOA2: Era of Angels II (1994) - Retro Heritage</title>
+    <style>
+        body, html { width: 100vw; height: 100vh; margin: 0; padding: 0; overflow: hidden; background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; }
+        #dos { max-width: 100%; max-height: 100%; object-fit: contain; image-rendering: pixelated; }
+        #status { position: absolute; bottom: 10px; left: 10px; z-index: 10; font-size: 14px; color: #0f0; text-shadow: 1px 1px #000; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <canvas id="dos"></canvas>
+    <div id="status">VITE-STATIC BOOTING...</div>
+    <script src="js-dos.js"></script>
+    <script>
+        const statusEl = document.getElementById("status");
+        function updateStatus(msg) {
+            statusEl.innerText = msg;
+            console.log("[EMU]", msg);
+        }
+
+        window.onload = () => {
+            if (typeof Dos === "undefined") {
+                updateStatus("ERROR: JS-DOS NOT LOADED.");
+            } else {
+                updateStatus("LIBRARY READY, INITIALIZING DOSBOX...");
+                Dos(document.getElementById("dos"), {
+                    wdosboxUrl: "wdosbox.js"
+                }).ready((fs, main) => {
+                    updateStatus("EXTRACTING GAME ASSETS...");
+                    fs.extract("eoa2.zip").then(() => {
+                        updateStatus("STARTING PLAY.COM...");
+                        main(["-c", "PLAY.COM"]);
+                    }).catch(err => {
+                        updateStatus("EXTRACTION ERROR: " + err);
+                    });
+                }).catch(err => {
+                    updateStatus("DOSBOX ERROR: " + err);
+                });
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+http:
+  routers:
+    dashboard-router:
+      rule: "PathPrefix(`/`)"
+      service: dashboard-service
+      priority: 1
+      entryPoints:
+        - web
+    api-router:
+      rule: "PathPrefix(`/api`)"
+      service: api-service
+      priority: 100
+      entryPoints:
+        - web
+    studio-router:
+      rule: "PathPrefix(`/studio`)"
+      service: api-service
+      priority: 100
+      entryPoints:
+        - web
+
+  services:
+    dashboard-service:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:5173"
+    api-service:
+      loadBalancer:
+        servers:
+          - url: "http://host.docker.internal:7051"

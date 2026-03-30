@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    container_name: ai-factory-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-ai_factory}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ai-factory-db-data:/var/var/lib/postgresql/data
+    networks:
+      - traefik-public
+    restart: always
+
+volumes:
+  ai-factory-db-data:
+
+networks:
+  traefik-public:
+    external: true

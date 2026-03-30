@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-Factory Dashboard</title>
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async></script>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
+    <script>
+      // Firebase Config (Matching AI-Tarot for consistency)
+      const firebaseConfig = {
+        apiKey: "AIzaSyB0lzNusHGHN3q5FBqM6M2PFcDdHJjmJt4",
+        authDomain: "ai-factory-tarot.firebaseapp.com",
+        projectId: "ai-factory-tarot"
+      };
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

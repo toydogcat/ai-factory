@@ -1,0 +1,7 @@
+{
+  "name": "AI 語音轉文字助手",
+  "description": "支援麥克風錄音與 MP3 上傳，自動生成帶時間戳的 TXT 與 SRT 字幕檔。",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
