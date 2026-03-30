@@ -54,7 +54,7 @@ app.include_router(orchestrator, prefix="/api/v1/orchestrator", tags=["Orchestra
 app.include_router(auth, prefix="/api/v1/auth", tags=["Auth"])
 app.include_router(system, prefix="/api/v1/system", tags=["System"])
 app.include_router(studio, prefix="/api/v1/studio", tags=["Studio"])
-app.include_router(social.router, prefix="/api/v1/social", tags=["Social"])
+app.include_router(social, prefix="/api/v1/social", tags=["Social"])
 
 # Serve AI-Studio Projects as static files
 # This allows paths like /studio/ai-speech-text/ to resolve to their built assets
