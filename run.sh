@@ -128,12 +128,9 @@ fi
 # --- START BACKEND ---
 echo -e "\n${BLUE}🐍 啟動後端服務 (Starting Backend)...${NC}"
 cd backend
-export PYTHONPATH=$PYTHONPATH:.
-if command -v uv &> /dev/null; then
-    conda run -n toby uv run uvicorn app.main:app --host 0.0.0.0 --port 7051 --reload > ../backend.log 2>&1 &
-else
-    conda run -n toby uvicorn app.main:app --host 0.0.0.0 --port 7051 --reload > ../backend.log 2>&1 &
-fi
+export PYTHONPATH=.
+# Disable any accidental .venv detection by prepending conda python
+conda run -n toby python -m uvicorn app.main:app --host 0.0.0.0 --port 7051 --reload > ../backend.log 2>&1 &
 cd ..
 
 # --- START FRONTEND ---
