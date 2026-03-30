@@ -140,7 +140,28 @@ echo -e "\n${BLUE}🐍 啟動後端服務 (Starting Backend)...${NC}"
 cd backend
 export PYTHONPATH=.
 # Disable any accidental .venv detection by prepending conda python
-conda run -n toby python -m uvicorn app.main:app --host 0.0.0.0 --port 7051 --reload > ../backend.log 2>&1 &
+# Use absolute path for conda to ensure non-interactive shell compatibility
+CONDA_BIN="/home/toby/miniconda3/bin/conda"
+if [ ! -f "$CONDA_BIN" ]; then CONDA_BIN="conda"; fi
+
+$CONDA_BIN run -n toby python -m uvicorn app.main:app --host 0.0.0.0 --port 7051 --reload > ../backend.log 2>&1 &
+
+# Verify backend startup
+echo -n "⏳ 等待後端就緒 (Waiting for Backend)..."
+BACKEND_READY=false
+for i in {1..30}; do
+    if netstat -ntlp 2>/dev/null | grep -q ":7051 "; then
+        echo -e "${GREEN} 就緒！ (Ready)${NC}"
+        BACKEND_READY=true
+        break
+    fi
+    echo -n "."
+    sleep 1
+done
+
+if [ "$BACKEND_READY" = false ]; then
+    echo -e "${RED}❌ 錯誤: 後端啟動逾時。請檢查 backend.log。${NC}"
+fi
 cd ..
 
 # --- START FRONTEND ---
