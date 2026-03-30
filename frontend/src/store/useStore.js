@@ -101,6 +101,11 @@ export const useStore = create((set, get) => ({
   },
 
   launchProject: async (projectName) => {
+    if (!projectName) {
+      console.error("Project name is undefined, cannot launch.");
+      set({ error: "Invalid project name" });
+      return null;
+    }
     try {
       const response = await axios.post(`${API_BASE_URL}/studio/launch/${projectName}`);
       // Update points after launch
@@ -230,10 +235,20 @@ export const useStore = create((set, get) => ({
     const { user, socket } = get();
     if (!user || socket) return;
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.host;
-    const wsUrl = `${protocol}//${host}${API_BASE_URL}/social/ws/${user}`;
+    // Better WebSocket URL handling for Absolute vs Relative API_BASE_URL
+    let wsUrl;
+    if (API_BASE_URL.startsWith('http')) {
+      // If absolute (Tunnels), transform protocol and keep host+path
+      const base = API_BASE_URL.replace(/^http/, 'ws');
+      wsUrl = `${base}/social/ws/${user}`;
+    } else {
+      // If relative, use current window host
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const host = window.location.host;
+      wsUrl = `${protocol}//${host}${API_BASE_URL}/social/ws/${user}`;
+    }
 
+    console.log("Connecting to WebSocket:", wsUrl);
     const newSocket = new WebSocket(wsUrl);
 
     newSocket.onmessage = (event) => {

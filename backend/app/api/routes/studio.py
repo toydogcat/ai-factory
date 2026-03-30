@@ -9,7 +9,9 @@ from app.core.db import get_db
 
 router = APIRouter()
 
-STUDIO_PATH = "/home/toymsi/documents/projects/Github/ai-factory/frontend/public/studio"
+current_file_path = os.path.dirname(os.path.abspath(__file__))
+# Correct relative path: backend/app/api/routes -> backend -> app -> app root -> frontend/public/studio
+STUDIO_PATH = os.path.abspath(os.path.join(current_file_path, "../../../../frontend/public/studio"))
 
 class StudioProject(BaseModel):
     name: str
