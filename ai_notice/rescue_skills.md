@@ -36,5 +36,13 @@
 - **健康檢查**：`docker compose -f docker/docker-compose.traefik.yml ps`。
 - **心臟起搏**：`docker compose -f docker/docker-compose.traefik.yml restart`。
 
+## 6. 💎 PROD+ 極致持久模式 (High Persistence)
+**情境**：頻繁修改後端代碼，但不想每次都重新等待隧道分配與 Firebase 部署。
+**坑位**：原有的 PRODUCTION 模式每次啟動都會強迫重複建置與發布前端。
+**自救技能**：
+- **加速啟動**：`./run.sh` -> 選項 `4) PROD+`。
+- **核心原理**：優先檢查並「複用」現有的 `tunnel.log`。若隧道依然有效，它會直接啟動後端而不重新部署前端，實現秒速重啟。
+- **故障排除**：若 `PROD+` 啟動後瀏覽器出現 502/CORS，代表舊隧道已過期。此時請重新執行選項 `3) PRODUCTION` 來獲取全新網址並同步前端。
+
 ---
-*這份文件是您的保險。遇到狀況時，請優先參考這五大技能！* 👏✨
+*這份文件是您的保險。遇到狀況時，請優先參考這六大技能！* 👏✨
